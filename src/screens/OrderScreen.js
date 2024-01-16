@@ -25,16 +25,22 @@ const OrderScreen = ({ navigation }) => {
     });
     fetchAllOrders();
   }, []);
+
   return (
-    <SafeAreaView className="flex-1 w-full p-5 bg-white">
+    <SafeAreaView
+      style={{ flex: 1, width: "100%", padding: 5, backgroundColor: "white" }}
+    >
       <View>
-        <Text className="font-bold text-xl">My Orders</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 20 }}>My Orders</Text>
       </View>
       {isLoggedIn ? (
-        <ScrollView className="mt-4 pt-4 " showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={{ marginTop: 4, paddingTop: 4 }}
+          showsVerticalScrollIndicator={false}
+        >
           {orders?.map((order) => (
             <OrderItem
-              key={order.id}
+              key={order.orderId}
               brand={order.brand}
               qty={order.qty}
               title={order.title}
@@ -46,8 +52,12 @@ const OrderScreen = ({ navigation }) => {
           ))}
         </ScrollView>
       ) : (
-        <View className="flex-1 items-center justify-center ">
-          <Text className="font-bold text-lg">Login to view your Orders!</Text>
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+            Login to view your Orders!
+          </Text>
         </View>
       )}
     </SafeAreaView>

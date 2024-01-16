@@ -15,7 +15,7 @@ export default function App() {
   const [currentProduct, setCurrentProduct] = useState(null);
   const [cartItems, setCartItems] = useState(null);
   const [orders, setOrders] = useState(null);
-
+  const [orderItems, setOrderItems] = useState(null);
   return (
     <AuthProvider
       value={{ isLoggedIn, setIsLoggedIn, currentUser, setCurrentUser }}
@@ -24,7 +24,9 @@ export default function App() {
         value={{ products, setProducts, currentProduct, setCurrentProduct }}
       >
         <CartProvider value={{ cartItems, setCartItems }}>
-          <OrderProvider value={{ orders, setOrders }}>
+          <OrderProvider
+            value={{ orders, setOrders, orderItems, setOrderItems }}
+          >
             <NavigationContainer>
               <TabNavigator />
             </NavigationContainer>
