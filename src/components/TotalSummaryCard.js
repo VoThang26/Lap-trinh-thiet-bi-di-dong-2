@@ -65,9 +65,7 @@ const TotalSummaryCard = ({ totalPrice }) => {
         }}
       >
         <Text style={{ fontWeight: "bold", fontSize: 16 }}>Total Price:</Text>
-        <Text style={{ fontWeight: "extrabold", fontSize: 20 }}>
-          ${totalPrice}
-        </Text>
+        <Text style={{ fontWeight: "800", fontSize: 20 }}>${totalPrice}</Text>
       </View>
       <Pressable
         onPress={placeOrder}
