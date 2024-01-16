@@ -1,14 +1,15 @@
 import { Text, View, Image, Pressable, ToastAndroid } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import User from "../../assets/user.png";
 import AuthContext from "../features/authContext";
 import { logout } from "../features/firebase/userAuth";
+import CreateProductV from "../components/CreateProduct";
 
 const ProfileScreen = () => {
   const { currentUser, setCurrentUser, isLoggedIn, setIsLoggedIn } =
     useContext(AuthContext);
-
+  const [modalVisible, setModalVisible] = useState(false);
   const handleLogout = async () => {
     const res = await logout();
     if (res.success === true) {
@@ -33,6 +34,22 @@ const ProfileScreen = () => {
               <Text className="text-xs, font-bold text-gray-500">
                 {currentUser?.email}
               </Text>
+              <Pressable
+                onPress={() => setModalVisible(!modalVisible)}
+                className="flex-row items-center justify-center border border-slate-400 rounded-full "
+              >
+                <Image
+                  style={{
+                    height: 40,
+                    width: 40,
+                    backgroundColor: "#aaaaaa",
+                    borderRadius: 50,
+                  }}
+                />
+                <Text className="font-semibold py-2 pr-4 pl-2">
+                  Creat Product
+                </Text>
+              </Pressable>
             </View>
           ) : (
             <View className="items-center justify-center">
@@ -54,6 +71,12 @@ const ProfileScreen = () => {
           </Pressable>
         </View>
       )}
+      <View>
+        <CreateProductV
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
+      </View>
     </SafeAreaView>
   );
 };

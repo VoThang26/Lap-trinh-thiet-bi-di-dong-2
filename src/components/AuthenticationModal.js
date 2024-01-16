@@ -19,7 +19,7 @@ import AuthContext from "../features/authContext";
 const AuthenticationModal = ({ modalVisible, setModalVisible }) => {
   const [type, setType] = useState("login");
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("test@test.com");
+  const [email, setEmail] = useState("test1@test.com");
   const [password, setPassword] = useState("123456");
   const [loading, setLoading] = useState(false);
 
@@ -50,12 +50,6 @@ const AuthenticationModal = ({ modalVisible, setModalVisible }) => {
     }
     setLoading(false);
   };
-
-  useEffect(() => {
-    if (currentUser) {
-      setIsLoggedIn(true);
-    }
-  }, [currentUser]);
 
   return (
     <View style={{ flex: 1, width: 1150, backgroundColor: "red" }}>

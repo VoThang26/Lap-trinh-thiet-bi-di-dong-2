@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 export const getProducts = async () => {
@@ -24,5 +24,31 @@ export const getProductById = async (productId) => {
     return product;
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const createProduct = async (
+  brand,
+  description,
+  image,
+  price,
+  title
+) => {
+  const newProductData = {
+    brand,
+    description,
+    image,
+    price,
+    title,
+  };
+
+  try {
+    const productsRef = collection(db, "products");
+    const newProductDoc = await addDoc(productsRef, newProductData);
+
+    return { success: true, productId: newProductDoc.id };
+  } catch (error) {
+    console.error("Error creating product:", error);
+    throw error;
   }
 };
