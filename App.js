@@ -1,56 +1,36 @@
-import React from "react";
-//import React in our code.
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-//import all the components we are going to use.
-import axios from "axios";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import TabNavigator from "./src/navigation/TabNavigator";
+import { useState } from "react";
+import { AuthProvider } from "./src/features/authContext";
+import { ProductProvider } from "./src/features/productContext";
+import { CartProvider } from "./src/features/cartContext";
+import { OrderProvider } from "./src/features/orderContext";
 
-const App = () => {
-  const getDataUsingSimpleGetCall = () => {
-    axios
-      .get("https://fakestoreapi.com/products")
-      .then(function (response) {
-        // handle success
-        alert(JSON.stringify(response.data));
-      })
-      .catch(function (error) {
-        // handle error
-        alert(error.message);
-      })
-      .finally(function () {
-        // always executed
-        alert("Finally called");
-      });
-  };
+export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [products, setProducts] = useState(null);
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const [cartItems, setCartItems] = useState(null);
+  const [orders, setOrders] = useState(null);
 
   return (
-    <View style={styles.container}>
-      <Text style={{ fontSize: 30, textAlign: "center" }}>
-        Example of Axios Networking in React Native
-      </Text>
-      {/*Running GET Request*/}
-      <TouchableOpacity
-        style={styles.buttonStyle}
-        onPress={getDataUsingSimpleGetCall}
+    <AuthProvider
+      value={{ isLoggedIn, setIsLoggedIn, currentUser, setCurrentUser }}
+    >
+      <ProductProvider
+        value={{ products, setProducts, currentProduct, setCurrentProduct }}
       >
-        <Text>Simple Get Call</Text>
-      </TouchableOpacity>
-    </View>
+        <CartProvider value={{ cartItems, setCartItems }}>
+          <OrderProvider value={{ orders, setOrders }}>
+            <NavigationContainer>
+              <TabNavigator />
+            </NavigationContainer>
+          </OrderProvider>
+        </CartProvider>
+      </ProductProvider>
+    </AuthProvider>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    flex: 1,
-    padding: 16,
-  },
-  buttonStyle: {
-    alignItems: "center",
-    backgroundColor: "#DDDDDD",
-    padding: 10,
-    width: "100%",
-    marginTop: 16,
-  },
-});
-
-export default App;
+}
