@@ -1,21 +1,38 @@
-import { Text, View, ScrollView } from "react-native";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import {
+  Text,
+  View,
+  ScrollView,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
+import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OrderItem from "../components/OrderItem";
 import { getAllOrderItems } from "../features/firebase/order";
 import OrderContext from "../features/orderContext";
-import { auth } from "../../firebase";
 import AuthContext from "../features/authContext";
 
 const OrderScreen = ({ navigation }) => {
   const { orders, setOrders } = useContext(OrderContext);
   const { isLoggedIn } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchAllOrders = async () => {
-    const res = await getAllOrderItems();
-    if (res.success === true) {
-      setOrders(res.data);
-      console.log("res.data", res.data);
+    try {
+      const res = await getAllOrderItems();
+      if (res.success === true) {
+        setOrders(res.data);
+
+        console.log("res.data", res.data);
+      } else {
+        setError("Failed to fetch orders");
+      }
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      setError("An error occurred while fetching orders");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -25,6 +42,9 @@ const OrderScreen = ({ navigation }) => {
     });
     fetchAllOrders();
   }, []);
+  const handleRestart = () => {
+    fetchAllOrders();
+  };
 
   return (
     <SafeAreaView
@@ -33,7 +53,9 @@ const OrderScreen = ({ navigation }) => {
       <View>
         <Text style={{ fontWeight: "bold", fontSize: 20 }}>My Orders</Text>
       </View>
-      {isLoggedIn ? (
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : isLoggedIn ? (
         <ScrollView
           style={{ marginTop: 4, paddingTop: 4 }}
           showsVerticalScrollIndicator={false}
@@ -60,6 +82,19 @@ const OrderScreen = ({ navigation }) => {
           </Text>
         </View>
       )}
+      {error && (
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <Text style={{ color: "red" }}>{error}</Text>
+        </View>
+      )}
+      <TouchableOpacity
+        onPress={handleRestart}
+        style={{ alignItems: "center", marginTop: 10 }}
+      >
+        <Text style={{ color: "blue", textDecorationLine: "underline" }}>
+          Restart
+        </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
